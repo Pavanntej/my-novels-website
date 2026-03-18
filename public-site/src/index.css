@@ -1,0 +1,12 @@
+.gold-btn {
+  background: linear-gradient(45deg, gold, #b8860b);
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: black;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.gold-btn:hover {
+  transform: scale(1.05);
+}
