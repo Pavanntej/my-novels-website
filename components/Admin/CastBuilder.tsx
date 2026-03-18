@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Plus, Trash2, Upload } from 'lucide-react';
 import { CastMember } from '@/types';
+import { supabase } from '@/lib/supabase';
 
 interface CastBuilderProps {
   cast: CastMember[];
