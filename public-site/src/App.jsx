@@ -4,56 +4,73 @@ import { supabase } from "./supabase"
 export default function App() {
   const [books, setBooks] = useState([])
   const [active, setActive] = useState(null)
-  const [settings, setSettings] = useState(null)
+  const [settings, setSettings] = useState({})
 
   useEffect(() => {
     fetchAll()
   }, [])
 
   async function fetchAll() {
-    const { data } = await supabase.from("books").select("*")
-    const { data: settingsData } = await supabase.from("settings").select("*").single()
+    const { data: booksData } = await supabase.from("books").select("*")
+    const { data: settingsData } = await supabase
+      .from("settings")
+      .select("*")
+      .eq("id", 1)
+      .single()
 
-    setBooks(data || [])
-    setActive(data?.[0])
-    setSettings(settingsData)
+    setBooks(booksData || [])
+    setActive(booksData?.[0])
+    setSettings(settingsData || {})
   }
 
   return (
     <div className="bg-black text-white min-h-screen">
 
-      {/* 🔥 GOLD HEADER */}
-      <div className="fixed top-0 w-full z-50 p-4 flex flex-col gap-3
-        bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-700 text-black shadow-lg">
+      {/* HEADER */}
+      <div className="fixed top-0 w-full z-50">
 
-        <h1 className="text-2xl font-bold">Bookshelf</h1>
+        {/* GOLD BAR */}
+        <div className="bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600 text-black px-6 py-3 flex justify-between items-center shadow-lg">
 
-        {/* LOGO SCROLL */}
-        <div className="flex gap-4 overflow-x-auto">
+          <h1 className="text-2xl font-bold tracking-wide">
+            Bookshelf
+          </h1>
+
+          <div className="flex gap-4 text-sm font-semibold">
+            {settings?.instagram && (
+              <a href={settings.instagram} target="_blank">Instagram</a>
+            )}
+            {settings?.youtube && (
+              <a href={settings.youtube} target="_blank">YouTube</a>
+            )}
+            {settings?.whatsapp && (
+              <a href={`https://wa.me/${settings.whatsapp}`}>WhatsApp</a>
+            )}
+            {settings?.email && (
+              <a href={`mailto:${settings.email}`}>Email</a>
+            )}
+          </div>
+
+        </div>
+
+        {/* LOGO SCROLLER */}
+        <div className="bg-black/80 backdrop-blur flex gap-4 px-4 py-2 overflow-x-auto">
           {books.map(b => (
             <img
               key={b.id}
               src={b.logo}
               onClick={() => setActive(b)}
-              className="h-10 cursor-pointer hover:scale-110 transition"
+              className="h-12 cursor-pointer hover:scale-110 transition"
             />
           ))}
-        </div>
-
-        {/* CONTACT + SOCIAL */}
-        <div className="flex gap-4 text-sm flex-wrap">
-          {settings?.instagram && <a href={settings.instagram} target="_blank">Instagram</a>}
-          {settings?.youtube && <a href={settings.youtube} target="_blank">YouTube</a>}
-          {settings?.whatsapp && <a href={`https://wa.me/${settings.whatsapp}`}>WhatsApp</a>}
-          {settings?.email && <a href={`mailto:${settings.email}`}>Email</a>}
         </div>
 
       </div>
 
       {/* DEFAULT SCREEN */}
       {!books.length && (
-        <div className="h-screen flex flex-col justify-center items-center">
-          <h1 className="text-5xl">Bookshelf</h1>
+        <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-black to-yellow-900">
+          <h1 className="text-5xl font-bold">Bookshelf</h1>
         </div>
       )}
 
@@ -71,6 +88,7 @@ export default function App() {
           {/* LEFT */}
           <div className="w-1/2 bg-black/60 backdrop-blur p-6 rounded-xl">
             <img src={active.logo} className="h-16 mb-3" />
+
             <p className="text-yellow-400">{active.genre}</p>
 
             <div className="flex gap-4 mt-4">
@@ -90,7 +108,7 @@ export default function App() {
           <div className="w-1/2 flex justify-end">
             <iframe
               src={`${active.trailer}?autoplay=1&mute=0`}
-              className="w-[300px] h-[530px] rounded-xl"
+              className="w-[300px] h-[530px] rounded-xl shadow-xl hover:scale-105 transition"
               allow="autoplay"
             />
           </div>
