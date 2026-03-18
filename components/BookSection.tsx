@@ -7,7 +7,7 @@ import { Book } from '../types';
 
 export default function BookSection({ book, index }: { book: Book; index: number }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { threshold: 0.6 });
+  const inView = useInView(ref, { amount: 0.6 });
   const accent = useDominantColor(book.poster_url);
 
   const trailerRef = useRef<HTMLIFrameElement>(null);
